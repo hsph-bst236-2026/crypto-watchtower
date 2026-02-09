@@ -1,41 +1,55 @@
 ---
 mode: 'agent'
-description: 'Commit all generated files and push to GitHub to deploy via GitHub Pages'
+description: 'Set up GitHub repository, commit all files, and deploy to GitHub Pages for hsph-bst236-2026 organization'
 tools: ['terminalLastCommand']
 ---
 
 # Deploy to GitHub Pages
 
-Commit all generated files and push to GitHub to trigger a Pages deployment.
+Set up the GitHub repository and deploy the Crypto Watchtower dashboard.
 
 ## Task
 
-Run these commands:
-
+### Step 1: Create GitHub Repository (if not exists)
+Using GitHub CLI or web interface, create a repo in the `hsph-bst236-2026` organization:
 ```bash
-# Stage all generated files
-git add crypto_raw.json volatile_movers.json volatility_report.json market_chart.png index.html daily_brief.txt generate_chart.py 2>/dev/null || true
-git add -A
+# Check if gh CLI is available and authenticated
+gh auth status
 
-# Commit with timestamp
-git commit -m "📊 Market update: $(date '+%Y-%m-%d %H:%M %Z')"
-
-# Push to origin
-git push origin main
+# Create repo in organization (if not exists)
+gh repo create hsph-bst236-2026/crypto-watchtower --public --source=. --remote=origin --push
 ```
 
-## Prerequisites
-- Git repository initialized
-- Remote origin configured
-- GitHub Pages enabled in repository settings (Settings → Pages → Source: main branch)
+### Step 2: If repo already exists, add remote and push
+```bash
+# Add remote (skip if already added)
+git remote add origin https://github.com/hsph-bst236-2026/crypto-watchtower.git 2>/dev/null || true
+
+# Push to main branch
+git push -u origin main
+```
+
+### Step 3: Enable GitHub Pages
+```bash
+# Enable Pages via GitHub CLI (requires gh-pages extension or API)
+gh api repos/hsph-bst236-2026/crypto-watchtower/pages -X POST -f source='{"branch":"main","path":"/"}' 2>/dev/null || echo "Pages may already be enabled or requires manual setup"
+```
+
+### Alternative: Manual GitHub Pages Setup
+If CLI doesn't work, instruct user to:
+1. Go to https://github.com/hsph-bst236-2026/crypto-watchtower/settings/pages
+2. Under "Source", select "Deploy from a branch"
+3. Select branch: `main`, folder: `/ (root)`
+4. Click Save
 
 ## Validation
 
-After pushing:
+After deployment:
 1. Confirm push was successful
-2. Report the GitHub Pages URL: `https://<username>.github.io/<repo>/`
-3. Note that it may take 1-2 minutes for changes to appear
+2. Report the GitHub Pages URL: `https://hsph-bst236-2026.github.io/crypto-watchtower/`
+3. Note: Site may take 1-2 minutes to go live
 
-## Notes
-- If no changes to commit, that's okay - report "No new changes"
-- If push fails, check authentication and remote configuration
+## Prerequisites
+- Git repository initialized with committed files
+- GitHub CLI (`gh`) authenticated with org access, OR
+- Manual access to organization repository settings

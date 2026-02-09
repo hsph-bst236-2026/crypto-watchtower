@@ -27,7 +27,7 @@ Create `index.html` with:
 - Responsive (works on mobile)
 
 ### JavaScript
-- Fetch `volatile_movers.json` and populate table
+- **Embed data directly** from `volatile_movers.json` as a JS array (avoids CORS issues with local files)
 - Format prices with locale string
 - Color-code change percentages
 - Show current timestamp

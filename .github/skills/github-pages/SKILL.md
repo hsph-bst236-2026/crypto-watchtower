@@ -103,30 +103,41 @@ This skill covers generating HTML dashboards, Git version control, and deploying
     </div>
     
     <script>
+        // IMPORTANT: Embed data directly to avoid CORS issues with local file:// protocol
+        // When generating, read volatile_movers.json and paste the array here
+        const COIN_DATA = [
+            // Example: {"name": "Bitcoin", "symbol": "btc", "current_price": 45000, "price_change_percentage_24h": 5.5, "market_cap": 850000000000}
+        ];
+        
         // Set timestamp
         document.getElementById('timestamp').textContent = new Date().toLocaleString();
         
-        // Load and display coin data
-        fetch('volatile_movers.json')
-            .then(r => r.json())
-            .then(coins => {
-                const tbody = document.querySelector('#coins-table tbody');
-                coins.sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
-                coins.forEach(coin => {
-                    const change = coin.price_change_percentage_24h;
-                    const changeClass = change > 0 ? 'gain' : 'loss';
-                    const changeSign = change > 0 ? '+' : '';
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${coin.name}</td>
-                            <td>${coin.symbol.toUpperCase()}</td>
-                            <td>$${coin.current_price.toLocaleString()}</td>
-                            <td class="${changeClass}">${changeSign}${change.toFixed(2)}%</td>
-                        </tr>
-                    `;
-                });
-            })
-            .catch(err => console.error('Failed to load data:', err));
+        // Display coin data (using embedded data, not fetch)
+        (function() {
+            const coins = COIN_DATA;
+            const tbody = document.querySelector('#coins-table tbody');
+            
+            if (coins.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No volatile coins today</td></tr>';
+                return;
+            }
+            
+            coins.sort((a, b) => (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0));
+            coins.forEach(coin => {
+                const change = coin.price_change_percentage_24h;
+                const changeClass = change > 0 ? 'gain' : (change < 0 ? 'loss' : '');
+                const changeSign = change > 0 ? '+' : '';
+                const changeText = change !== null ? `${changeSign}${change.toFixed(2)}%` : 'N/A';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${coin.name}</td>
+                        <td>${coin.symbol.toUpperCase()}</td>
+                        <td>$${coin.current_price.toLocaleString()}</td>
+                        <td class="${changeClass}">${changeText}</td>
+                    </tr>
+                `;
+            });
+        })();
     </script>
 </body>
 </html>

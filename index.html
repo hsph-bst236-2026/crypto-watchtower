@@ -105,6 +105,13 @@
     </div>
     
     <script>
+        // Embedded data (works offline and avoids CORS issues)
+        const COIN_DATA = [
+            {"name": "LEO Token", "symbol": "leo", "current_price": 8.49, "price_change_percentage_24h": 8.46249, "market_cap": 7821530409},
+            {"name": "MemeCore", "symbol": "m", "current_price": 1.32, "price_change_percentage_24h": -29.44311, "market_cap": 2293839928},
+            {"name": "Circle USYC", "symbol": "usyc", "current_price": 1.11, "price_change_percentage_24h": null, "market_cap": 1603070014}
+        ];
+        
         // Set timestamp
         document.getElementById('timestamp').textContent = new Date().toLocaleString();
         
@@ -122,47 +129,42 @@
             return '$' + cap.toLocaleString();
         }
         
-        // Load and display coin data
-        fetch('volatile_movers.json')
-            .then(r => r.json())
-            .then(coins => {
-                const tbody = document.querySelector('#coins-table tbody');
-                const alertContainer = document.getElementById('alert-container');
-                
-                // Sort by price change
-                coins.sort((a, b) => (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0));
-                
-                // Check for major drops
-                const bigDrops = coins.filter(c => c.price_change_percentage_24h && c.price_change_percentage_24h < -10);
-                if (bigDrops.length > 0) {
-                    alertContainer.innerHTML = `
-                        <div class="alert">
-                            <h3>⚠️ WHALE ALERT: Major Drop Detected!</h3>
-                            <p>${bigDrops.map(c => c.name + ' (' + c.price_change_percentage_24h.toFixed(1) + '%)').join(', ')}</p>
-                        </div>
-                    `;
-                }
-                
-                coins.forEach(coin => {
-                    const change = coin.price_change_percentage_24h;
-                    const changeClass = change > 0 ? 'gain' : 'loss';
-                    const changeSign = change > 0 ? '+' : '';
-                    const changeText = change !== null ? `${changeSign}${change.toFixed(2)}%` : 'N/A';
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${coin.name}</td>
-                            <td>${coin.symbol.toUpperCase()}</td>
-                            <td>${formatPrice(coin.current_price)}</td>
-                            <td class="${changeClass}">${changeText}</td>
-                            <td>${formatMarketCap(coin.market_cap)}</td>
-                        </tr>
-                    `;
-                });
-            })
-            .catch(err => {
-                console.error('Failed to load data:', err);
-                document.querySelector('#coins-table tbody').innerHTML = '<tr><td colspan="5">Failed to load data</td></tr>';
+        // Display coin data
+        (function() {
+            const coins = COIN_DATA;
+            const tbody = document.querySelector('#coins-table tbody');
+            const alertContainer = document.getElementById('alert-container');
+            
+            // Sort by price change
+            coins.sort((a, b) => (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0));
+            
+            // Check for major drops
+            const bigDrops = coins.filter(c => c.price_change_percentage_24h && c.price_change_percentage_24h < -10);
+            if (bigDrops.length > 0) {
+                alertContainer.innerHTML = `
+                    <div class="alert">
+                        <h3>⚠️ WHALE ALERT: Major Drop Detected!</h3>
+                        <p>${bigDrops.map(c => c.name + ' (' + c.price_change_percentage_24h.toFixed(1) + '%)').join(', ')}</p>
+                    </div>
+                `;
+            }
+            
+            coins.forEach(coin => {
+                const change = coin.price_change_percentage_24h;
+                const changeClass = change > 0 ? 'gain' : (change < 0 ? 'loss' : '');
+                const changeSign = change > 0 ? '+' : '';
+                const changeText = change !== null ? `${changeSign}${change.toFixed(2)}%` : 'N/A';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${coin.name}</td>
+                        <td>${coin.symbol.toUpperCase()}</td>
+                        <td>${formatPrice(coin.current_price)}</td>
+                        <td class="${changeClass}">${changeText}</td>
+                        <td>${formatMarketCap(coin.market_cap)}</td>
+                    </tr>
+                `;
             });
+        })();
     </script>
 </body>
 </html>

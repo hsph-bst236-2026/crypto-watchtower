@@ -47,7 +47,8 @@ Skills provide domain expertise as reference documentation.
 | Code Review | `code-review/` | Quality checklist, anti-patterns |
 | Code Revise | `code-revise/` | Refactoring patterns, fixes |
 | Data Viz | `data-viz/` | Matplotlib charts, styling |
-| GitHub Pages | `github-pages/` | HTML templates, Git deployment |
+| GitHub Pages | `github-pages/` | HTML templates, static sites |
+| GitHub Deploy | `github-deploy/` | hsph-bst236-2026 org deployment |
 
 ---
 
