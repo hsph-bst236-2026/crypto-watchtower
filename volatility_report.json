@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-02-08T20:59:20.887235",
+  "total_volatile": 3,
+  "gainers_count": 1,
+  "losers_count": 1,
+  "avg_change": -10.49,
+  "std_dev": 26.8,
+  "top_gainer": {
+    "name": "LEO Token",
+    "symbol": "leo",
+    "current_price": 8.49,
+    "price_change_percentage_24h": 8.46249,
+    "market_cap": 7821530409
+  },
+  "top_loser": {
+    "name": "MemeCore",
+    "symbol": "m",
+    "current_price": 1.32,
+    "price_change_percentage_24h": -29.44311,
+    "market_cap": 2293839928
+  },
+  "total_market_cap": 11718440351
+}

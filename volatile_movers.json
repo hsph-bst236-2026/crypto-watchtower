@@ -1,0 +1,23 @@
+[
+  {
+    "name": "LEO Token",
+    "symbol": "leo",
+    "current_price": 8.49,
+    "price_change_percentage_24h": 8.46249,
+    "market_cap": 7821530409
+  },
+  {
+    "name": "MemeCore",
+    "symbol": "m",
+    "current_price": 1.32,
+    "price_change_percentage_24h": -29.44311,
+    "market_cap": 2293839928
+  },
+  {
+    "name": "Circle USYC",
+    "symbol": "usyc",
+    "current_price": 1.11,
+    "price_change_percentage_24h": null,
+    "market_cap": 1603070014
+  }
+]
